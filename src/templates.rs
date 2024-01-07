@@ -11,3 +11,8 @@ pub struct Index {}
 pub struct HelloTemplate {
     name: String,
 }
+
+
+#[derive(Template)]
+#[template(path = "register.html")]
+pub struct Register {}
