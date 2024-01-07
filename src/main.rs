@@ -38,7 +38,7 @@ async fn main() {
         Err(err) => println!("🔥 Failed to create database schema: {:?}", err),
     }
 
-    let app = make_app(Arc::new(AppState { db: pool.clone() }));
+    let app = make_app(AppState { db: pool.clone() });
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:42069").await.unwrap();
     axum::serve(listener, app).await.unwrap();

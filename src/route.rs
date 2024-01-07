@@ -1,11 +1,10 @@
 mod user_api;
 use crate::AppState;
-use std::sync::Arc;
 use axum::{response::Html, routing::get, Router};
 use crate::templates::Index;
 use askama::Template;
 
-pub fn make_app(state: AppState) -> Router<AppState> {
+pub fn make_app(state: AppState) -> Router {
     let user_routes = user_api::user_api(state);
 
     Router::new()
