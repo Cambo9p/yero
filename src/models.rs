@@ -5,15 +5,17 @@ use sqlx::{Postgres, Pool};
 pub struct User {
     pub id: i32,
     pub username: String,
+    pub email: String,
     pub password: String,
 }
 
 impl User {
-    pub async fn create_user(pool: &Pool<Postgres>, username: String, password: String) -> Result<User, sqlx::Error>  {
+    pub async fn create_user(pool: &Pool<Postgres>, username: String, email: String, password: String) -> Result<User, sqlx::Error>  {
         let user = sqlx::query_as!(
             User,
-            "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *",
+            "INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *",
             username,
+            email,
             password
         ).fetch_one(pool).await?;
 
@@ -38,4 +40,11 @@ impl User {
             }
         }
     }
+}
+
+
+#[derive(Debug, serde::Deserialize)]
+pub struct RegisterUserSchema {
+    pub username: String,
+    pub password: String,
 }
