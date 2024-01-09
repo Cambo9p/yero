@@ -9,7 +9,7 @@ use dotenv::dotenv;
 
 #[derive(Clone)]
 pub struct AppState {
-    db: Pool<Postgres>,
+    pub db: Pool<Postgres>,
 }
 
 #[tokio::main]

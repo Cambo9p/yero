@@ -1,7 +1,7 @@
 use crate::AppState;
 
 use axum::{
-    routing::{get, post},
+    routing::get,
     Router,
 };
 
@@ -19,9 +19,10 @@ pub enum ApiError {
     InternalServerError,
 }
 
-pub fn init_router(_state: AppState) -> Router {
+pub fn init_router(state: AppState) -> Router {
     Router::new()
         .route("/api/hello", get(hello_handler))
         .route("/api/register", get(handle_registration_get).post(handle_registration_post))
+        .with_state(state)
         //.route("/api/auth/register", post(register_user_handler))
 }
