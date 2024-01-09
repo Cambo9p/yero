@@ -12,7 +12,9 @@ use askama::Template;
 use axum::{
     extract::State,
     response::Html,
+    response::{IntoResponse, Redirect},
     Form,
+    http::StatusCode,
 };
 
 pub async fn hello_handler() -> Html<String> { 
@@ -20,6 +22,7 @@ pub async fn hello_handler() -> Html<String> {
 }
 
 pub async fn handle_registration_get() -> Html<String> { 
+    println!("GET /api/register");
     return Html(Register {}.render().unwrap());
 }
 
@@ -31,8 +34,8 @@ pub struct RegistrationFormData {
 }
 
 pub async fn handle_registration_post(State(app_state): State<AppState>,
-    Form(form_data): Form<RegistrationFormData>) -> Html<String> { 
-
+    Form(form_data): Form<RegistrationFormData>) -> impl IntoResponse { 
+    println!("POST /api/register");
     println!("got user: {:?}, pass {:?}", form_data.username, form_data.password);
     let res = User::create_user(&app_state.db, form_data.username, form_data.email, form_data.password).await;
 
@@ -41,14 +44,24 @@ pub async fn handle_registration_post(State(app_state): State<AppState>,
     match res {
         Ok(_) => {
             // TODO: log the user in
-            return Html(Index {}.render().unwrap());
+            println!("got to rright spot");
+            //return Html(Index {}.render().unwrap());
+            Redirect::to("/home/dashboard").into_response()
         },
         Err(err) => {
             // TODO: handle all error cases -> what if the user already exists?
             println!("error {}", err);
-            return Html(Register {}.render().unwrap());
+            //return Html(Register {}.render().unwrap());
+            (StatusCode::INTERNAL_SERVER_ERROR,
+            "Something went wrong...",
+        ).into_response()
         }
     }
+}
+
+pub async fn handle_dashboard_get(
+    State(app_state): State<AppState>) -> impl IntoResponse { 
 
 
+    return Html(Index {}.render().unwrap());
 }
