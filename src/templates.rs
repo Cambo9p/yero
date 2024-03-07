@@ -2,8 +2,8 @@ use askama::Template;
 
 
 #[derive(Template)]
-#[template(path = "index.html")]
-pub struct Index {}
+#[template(path = "home.html")]
+pub struct Home {}
 
 
 #[derive(Template)]
